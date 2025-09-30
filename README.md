@@ -93,6 +93,7 @@ print(trash)
 
 ```
 ![Картинка 7](./images/lab01/07.png)
+<<<<<<< HEAD
 
 ## Лабораторная работа 2
 
@@ -207,3 +208,5 @@ print(format_record(info))
 print(format_record(info2))
 ```
 ![Вывод на двух разных входах](./images/lab02/image3.png)
+=======
+>>>>>>> f821e284b7105a0c377adfa5883b716d4757275d
