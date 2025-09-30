@@ -1,0 +1,11 @@
+n = int(input())
+ochnoe = 0
+zaochnoe = 0
+for i in range(n):
+    info = str(input())
+    info = info.split()
+    if info.count("True") >= 1:
+        ochnoe += 1
+    else:
+        zaochnoe += 1
+print("out:", ochnoe, zaochnoe)

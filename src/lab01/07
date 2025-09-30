@@ -1,0 +1,20 @@
+trash = str(input())
+word= ''
+counter = -1
+trash = list(trash)
+for i in trash:
+    counter += 1
+    if i in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+        word += i
+        break
+trash = trash[counter:]
+counter = -1
+for j in trash:
+    counter += 1
+    if j in "0123456789":
+        word += trash[counter + 1]
+        break
+trash = trash[::counter + 1]
+trash = "".join(trash)
+print(trash)
+
