@@ -93,7 +93,6 @@ print(trash)
 
 ```
 ![Картинка 7](./images/lab01/07.png)
-<<<<<<< HEAD
 
 ## Лабораторная работа 2
 
@@ -208,7 +207,60 @@ print(format_record(info))
 print(format_record(info2))
 ```
 ![Вывод на двух разных входах](./images/lab02/image3.png)
-=======
->>>>>>> f821e284b7105a0c377adfa5883b716d4757275d
 
+## Лабораторная работа 3
+### text из lib
+```python
+from re import *
+from collections import Counter
 
+def normalize(stroka):
+    stroka = stroka.casefold()
+    stroka = stroka.replace("ё", "е")
+    stroka = stroka.split()
+    stroka = " ".join(stroka)
+    return stroka
+
+def tokenize(stroka):
+    stroka = normalize(stroka)
+    pattern = r'\w+(?:-\w+)*'
+    match = findall(pattern, stroka)
+    return match
+
+def count_freq(stroka):
+    freq = Counter(stroka)
+    freq = dict(freq)
+    return(freq)
+
+def top_n(stroka, n):
+    freq = Counter(stroka)
+    sorted_freq = sorted(freq.items(), key = lambda item: (-item[1], item[0]))
+    return sorted_freq[0:n]
+
+```
+
+### text_stats
+```python
+import sys
+import os
+
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, project_root)
+
+from src.lib.text import normalize, tokenize, count_freq, top_n
+
+words = sys.stdin.read()
+
+count_words = (count_freq(tokenize(words)))
+top_words =  top_n(tokenize(words), 5)
+
+print("Всего слов: " + str(len(tokenize(words))))
+print("Уникальных слов: " + str(len(count_words)))
+print("Топ 5:")
+for i in range(len(top_words)):
+    print(str(top_words[i][0]) + ":" + str(top_words[i][1]))
+```
+
+![Картинка](./images/lab03/image.png)
+
+i am a test string
