@@ -263,4 +263,66 @@ for i in range(len(top_words)):
 
 ![Картинка](./images/lab03/image.png)
 
-i am a test string
+## Лабораторная работа 4
+### io_txt_csv.py
+```python
+from pathlib import *
+import csv
+from typing import Iterable, Sequence
+
+def read_text (path: str, encoding = "utf-8") -> str:
+    if type(path) == str:
+        if not Path(path).exists():
+            raise FileNotFoundError
+        if encoding != "utf-8":
+            raise UnicodeDecodeError
+    else:
+        raise TypeError
+    return Path(path).read_text(encoding=encoding)
+
+def write_csv(rows, path: str | Path, header: tuple[str, ...] | None) -> None:  
+    if rows is None:
+        rows = []
+    p = Path(path)
+    rows = list(rows)
+    with p.open("w", newline="", encoding="utf-8") as f:
+        for j in range(len(rows) - 1): # Проверяем длину каждого элемента данных
+            if len(rows[j]) != len(rows[j+1]):
+                raise ValueError
+        w = csv.writer(f)
+        if header is not None:
+            w.writerow(header)
+        if header is not None and rows != []:
+            if len(header) != len(rows[0]): #заголовков надо столько-же
+                raise ValueError
+        for r in rows:
+            w.writerow(r)
+```
+### Созданный файл с текстом
+![Картинка](./images/lab04/1.png)
+
+### text_report.py
+```python
+import sys
+import os
+from pathlib import Path
+
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, project_root)
+
+from src.lib.text import normalize, tokenize, count_freq, top_n
+from src.lab04.io_txt_csv import read_text, write_csv
+
+path_in = "././data/lab04/input.txt"
+if Path(path_in).exists(): # Проверяем наличие входного файла
+    with open(path_in, mode="r", newline='', encoding='utf-8') as f:
+        stroka = f.read()
+        format_stroka = top_n(count_freq(tokenize(stroka)), 5)
+        i = write_csv(format_stroka, ('src/lab04/report.csv'), ('word','count'))
+        r = read_text('src/lab04/report.csv', encoding = "utf-8")   
+        print(r)
+else:
+    raise FileNotFoundError # Если файла нет - ошибка
+```
+### Созданный файл csv
+![Картинка](./images/lab04/2.png)
