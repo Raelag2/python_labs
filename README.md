@@ -326,3 +326,66 @@ else:
 ```
 ### Созданный файл csv
 ![Картинка](./images/lab04/2.png)
+
+## Лабораторная работа 5
+### json_csv.py
+```python
+from pathlib import Path
+import json
+import csv
+
+def csv_2_json(samples: str, out: str|Path = None, encoding='utf-8'):
+    spisok = []
+    with open(samples, encoding='utf-8') as csv_fi:
+        filtr = csv.DictReader(csv_fi)
+        for li1 in filtr:
+            spisok.append(li1)
+    
+    if out is None:
+        samples = Path(samples)
+        diroput = Path('data\out')
+        out = diroput / f'people_from_csv.json'
+
+    with open(out,'w',encoding='utf-8') as json_fi:
+        json.dump(spisok, json_fi, ensure_ascii=False)
+
+
+def json_2_csv(samples: str, out: str|Path = None, encoding = 'utf-8'):
+    with open(samples, 'r', encoding='utf-8') as json_fi:
+        filtr = json.load(json_fi)
+    
+    if out is None:
+        samples = Path(samples)
+        diroput = Path('data\out')
+        out = diroput / f'people_from_json.csv'
+
+    with open(out,'w',encoding='utf-8',newline='') as csv_fi:
+        head = filtr[0].keys()
+        pisa = csv.DictWriter(csv_fi, fieldnames=head)
+        pisa.writeheader()
+        pisa.writerows(filtr)
+ ```
+
+ ### csv_xlsx.py
+```python
+from pathlib import Path
+from openpyxl import *
+import csv 
+
+def csv_2_xlsx(samples: str, out: str|Path = None, encoding='utf-8'):
+    f_xlsx = Workbook()
+    stranica = f_xlsx.active
+    stranica.title = 'Эксель формат'
+
+    if out is None:
+        samples = Path(samples)
+        diroput = Path('data\out')
+        out = diroput / f'people.xlsx'
+
+    with open(samples,'r',encoding='utf-8') as csv_fi:
+        filtr = csv.reader(csv_fi)
+        for nu_st, lin in enumerate(filtr,1):
+            for nu_cmn, val in enumerate(lin,1):
+                stranica.cell(row=nu_st,column=nu_cmn,value=val)
+    f_xlsx.save(out)  
+ ```

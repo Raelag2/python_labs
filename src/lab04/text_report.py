@@ -9,12 +9,11 @@ from src.lib.text import normalize, tokenize, count_freq, top_n
 from src.lab04.io_txt_csv import read_text, write_csv
 
 path_in = "././data/lab04/input.txt"
-if Path(path_in).exists(): # Проверяем наличие входного файла
-    with open(path_in, mode="r", newline='', encoding='utf-8') as f:
-        stroka = f.read()
-        format_stroka = top_n(count_freq(tokenize(stroka)), 5)
-        i = write_csv(format_stroka, ('src/lab04/report.csv'), ('word','count'))
-        r = read_text('src/lab04/report.csv', encoding = "utf-8")   
-        print(r)
+path_out = "././src/lab04/report.csv"
+if path_in.endswith('.txt'):
+    if path_out.endswith('.csv'):
+        stroka = read_text(path=path_in)
+        stroka = top_n(count_freq(tokenize(stroka)), 5)
+        write_csv(stroka, path=path_out, header = ('word','count'))
 else:
-    raise FileNotFoundError # Если файла нет - ошибка
+    raise TypeError
