@@ -1,36 +1,21 @@
 from pathlib import Path
-import json
-import csv
+from openpyxl import *
+import csv 
 
-def csv_2_json(puta: str|Path, outputa: str|Path = None, encoding='utf-8'):
-    tester = []
+def csv_2_xlsx(samples: str, out: str|Path = None, encoding='utf-8'):
+    f_xlsx = Workbook()
+    stranica = f_xlsx.active
+    stranica.title = 'Эксель формат'
 
-    with open(puta, encoding='utf-8') as csv_fi:
-        red = csv.DictReader(csv_fi)
-        for li1 in red:
-            tester.append(li1)
-    
-    if outputa is None:
-        puta = Path(puta)
-        diroputa = Path('data\output_stuff')
-        outputa = diroputa / f'{puta.stem}.json'
+    if out is None:
+        samples = Path(samples)
+        diroput = Path('data\out')
+        out = diroput / f'people.xlsx'
 
-
-    with open(outputa,'w',encoding='utf-8') as json_fi:
-        json.dump(tester, json_fi, ensure_ascii=False, indent=2)
-
-
-def json_2_csv(puta: str|Path, outputa: str|Path = None, encoding = 'utf-8'):
-    with open(puta, 'r', encoding='utf-8') as json_fi:
-        blue = json.load(json_fi)
-    
-    if outputa is None:
-        puta = Path(puta)
-        diroputa = Path('data\output_stuff')
-        outputa = diroputa / f'{puta.stem}.csv'
-
-    with open(outputa,'w',encoding='utf-8',newline='') as csv_fi:
-        head = blue[0].keys()
-        pisa = csv.DictWriter(csv_fi, fieldnames=head)
-        pisa.writeheader()
-        pisa.writerows(blue)
+    with open(samples,'r',encoding='utf-8') as csv_fi:
+        filtr = csv.reader(csv_fi)
+        for nu_st, lin in enumerate(filtr,1):
+            for nu_cmn, val in enumerate(lin,1):
+                stranica.cell(row=nu_st,column=nu_cmn,value=val)
+    f_xlsx.save(out)  
+ 

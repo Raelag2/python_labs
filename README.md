@@ -389,3 +389,156 @@ def csv_2_xlsx(samples: str, out: str|Path = None, encoding='utf-8'):
                 stranica.cell(row=nu_st,column=nu_cmn,value=val)
     f_xlsx.save(out)  
  ```
+
+## Лабораторная работа 5
+### cli_convert.py
+```python
+import csv
+import json
+import sys 
+import os
+from openpyxl import Workbook
+from pathlib import Path
+import argparse
+
+def csv_2_xlsx(input_file: str|Path, output_file: str|Path = None, encoding='utf-8'):
+    workbook = Workbook()
+    worksheet = workbook.active
+    worksheet.title = 'Основной лист'
+
+    if output_file is None:
+        input_path = Path(input_file)
+        output_dir = Path('data/output_stuff')
+        output_file = output_dir / f'{input_path.stem}.xlsx'
+
+    with open(input_file, 'r', encoding='utf-8') as csv_file:
+        reader = csv.reader(csv_file)
+        for row_num, row_data in enumerate(reader, 1):
+            for col_num, cell_value in enumerate(row_data, 1):
+                worksheet.cell(row=row_num, column=col_num, value=cell_value)
+    workbook.save(output_file)  
+
+def csv_2_json(input_file: str|Path, output_file: str|Path = None, encoding='utf-8'):
+    data_list = []
+
+    with open(input_file, encoding='utf-8') as csv_file:
+        reader = csv.DictReader(csv_file)
+        for row in reader:
+            data_list.append(row)
+    
+    if output_file is None:
+        input_path = Path(input_file)
+        output_dir = Path('data/output_stuff')
+        output_file = output_dir / f'{input_path.stem}.json'
+
+    with open(output_file, 'w', encoding='utf-8') as json_file:
+        json.dump(data_list, json_file, ensure_ascii=False, indent=2)
+
+def json_2_csv(input_file: str|Path, output_file: str|Path = None, encoding='utf-8'):
+    with open(input_file, 'r', encoding='utf-8') as json_file:
+        json_data = json.load(json_file)
+    
+    if output_file is None:
+        input_path = Path(input_file)
+        output_dir = Path('data/output_stuff')
+        output_file = output_dir / f'{input_path.stem}.csv'
+
+    with open(output_file, 'w', encoding='utf-8', newline='') as csv_file:
+        headers = json_data[0].keys()
+        writer = csv.DictWriter(csv_file, fieldnames=headers)
+        writer.writeheader()
+        writer.writerows(json_data)    
+
+def configure_arguments():
+    parser = argparse.ArgumentParser(description='Конвертер файлов между форматами CSV, JSON и Excel')
+    parser.add_argument('--mode', type=str, required=True,
+                        choices=['csv2json', 'json2csv', 'csv2xlsx'],
+                        help='Выбор формата конвертации: csv2json, json2csv или csv2xlsx')
+    parser.add_argument('--input', type=str, required=True,
+                        help='Путь к исходному файлу для конвертации')
+    parser.add_argument('--output', type=str,
+                        help='Путь для сохранения конвертированного файла (опционально)')
+    parser.add_argument('--encoding', type=str, default='utf-8',
+                        help='Кодировка файлов (по умолчанию: utf-8)')
+    args = parser.parse_args()
+    
+    if args.mode == 'csv2json':
+        csv_2_json(args.input, args.output, args.encoding)
+    elif args.mode == 'json2csv':
+        json_2_csv(args.input, args.output, args.encoding)
+    elif args.mode == 'csv2xlsx':
+        csv_2_xlsx(args.input, args.output, args.encoding)    
+
+if __name__ == '__main__':
+    configure_arguments()
+```
+### cli_text.py
+```python
+from pathlib import Path
+import sys
+import os
+import argparse
+
+def tokenize(text):
+    import re
+    text = text.casefold().strip()
+    text = re.sub(r'[^0-9ёa-zA-Zа-яА-Я-]', ' ', text)
+    text = text.replace('ё', 'е')
+    text = text.split()
+    text = ' '.join(text)
+    return text.split(' ')
+
+def count_freq(words):
+    unique_words = set(words)
+    sorted_unique = sorted(unique_words)
+    frequency_dict = {}
+    for word in sorted_unique:
+        frequency_dict[word] = words.count(word)
+    return frequency_dict
+
+def show_statistics(filename, limit):
+    with open(filename, 'r', encoding='utf-8') as file:
+        content = file.read()
+        tokens = sorted(tokenize(content))
+        frequencies = count_freq(tokens)
+        top_words = sorted(frequencies.items(), key=lambda item: item[1], reverse=True)[:limit]
+    print(top_words)    
+    
+def display_file_content(filename, show_numbers=False):
+    with open(filename, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+        line_number_width = len(str(len(lines)))
+        for index, line in enumerate(lines, start=1):
+            if show_numbers:
+                print(f"{index}. {line}", end='')
+            else:
+                print(line, end='')                
+
+def process_arguments():
+    parser = argparse.ArgumentParser(description='Утилита для работы с текстовыми файлами')
+    parser.add_argument('--mode', type=str, required=True,
+                     choices=['stats', 'cat'],
+                     help='Режим работы: stats - статистика, cat - просмотр файла')
+    parser.add_argument('--input', type=str, required=True,
+                     help='Путь к входному файлу')
+    parser.add_argument('--output', type=str,
+                     help='Путь для сохранения результата (опционально)')
+    parser.add_argument('--encoding', type=str, default='utf-8',
+                     help='Кодировка файла (по умолчанию: utf-8)')
+    parser.add_argument('-t', '--top', type=int,
+                     help='Количество наиболее частых слов для вывода (только для режима stats)')
+    parser.add_argument('-n', '--number', action='store_true',
+                     help='Показывать номера строк (только для режима cat)')
+    args = parser.parse_args()
+    
+    if args.mode == 'stats':
+        if not args.top:
+            print("Ошибка: для режима stats необходимо указать параметр --top")
+            sys.exit(1)
+        show_statistics(args.input, args.top)
+    elif args.mode == 'cat':
+        display_file_content(args.input, args.number)
+
+if __name__ == '__main__':
+    process_arguments()
+```
