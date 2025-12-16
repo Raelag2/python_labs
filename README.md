@@ -1,544 +1,459 @@
-## Лабораторная работа 1
-
-### Задание 1
+## Лабораторная работа 8
+### models.py
 ```python
-name = str(input('Имя: '))
-age = int(input('Возраст: '))
-print("Привет,", name + '!', 'Через год тебе будет', age + 1)
-```
-![Картинка 1](./images/lab01/01_greetingsc.png)
+from dataclasses import dataclass, field, asdict
+from datetime import datetime, date
+from typing import Optional
+import re
 
-### Задание 2
-```python
-num1 = float(input('a: ').replace(',', '.'))
-num2 = float(input('b: ').replace(',', '.'))
-summa = num1 + num2
-srednee = (num1 + num2) / 2
-print('sum='+ str(summa), 'avg=' + str(srednee))
-```
-![Картинка 2](./images/lab01/02_sum_avg.png)
-
-### Задание 3
-```python
-price = int(input())
-discount = float(input())
-vat = float(input())
-base = price * (1 - discount/100)
-vat_amount = base * (vat/100)
-print('База после скидки:' + str(base) + ' ₽')
-print('НДС:' + str(base * (vat/100)) + ' ₽')
-print('Итого к оплате:' + str(base + vat_amount) + ' ₽')
-```
-![Картинка 3](./images/lab01/03_discount_vat.png)
-
-### Задание 4
-```python
-minutes = int(input('Минуты: '))
-a = minutes // 60
-b = minutes - a*60
-print(f'{a}:{b:02d}')
-```
-![Картинка 4](./images/lab01/04_minutes_to_hhmm.png)
-
-### Задание 5
-```python
-fio = str(input('ФИО: '))
-lenfio = len(fio.replace(' ', ''))
-fio = fio.split()
-f = fio[0][0]
-i = fio[1][0]
-o = fio[2][0]
-print('Инициалы:', str(f) + str(i) + str(o))
-print('Длина (символов):', lenfio + 2)
-```
-![Картинка 5](./images/lab01/05_initials_and_len.png)
-
-### Задание 6
-```python
-n = int(input())
-ochnoe = 0
-zaochnoe = 0
-for i in range(n):
-    info = str(input())
-    info = info.split()
-    if info.count("True") >= 1:
-        ochnoe += 1
-    else:
-        zaochnoe += 1
-print("out:", ochnoe, zaochnoe)
-```
-![Картинка 6](./images/lab01/06.png)
-
-### Задание 7
-```python
-trash = str(input())
-word= ''
-counter = -1
-trash = list(trash)
-for i in trash:
-    counter += 1
-    if i in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
-        word += i
-        break
-trash = trash[counter:]
-counter = -1
-for j in trash:
-    counter += 1
-    if j in "0123456789":
-        word += trash[counter + 1]
-        break
-trash = trash[::counter + 1]
-trash = "".join(trash)
-print(trash)
-
-```
-![Картинка 7](./images/lab01/07.png)
-
-## Лабораторная работа 2
-
-### Задание 1
-```python
-def min_max(numlist):
-    max_num = max(numlist)
-    min_num = min(numlist)
-    min_max = (min_num, max_num)
-    return min_max
-
-def unique_sorted(numlist):
-    sort_num_list = sorted(set(numlist))
-    return sort_num_list
-
-def flatten(tuple_num_list):
-    massiv_num_list = []
-    for numlist in tuple_num_list:
-        if isinstance(numlist, (list, tuple)):
-            for num in numlist:
-                massiv_num_list.append(num)
-        else:
-            raise TypeError
-    return massiv_num_list
-
-n1 = [3, -1, 5, 5, 0]
-n2 = [1.0, 1, 2.5, 2.5, 0]
-n3 = [[1], [], [2, 3]]
-
-print(min_max(n1))
-print(unique_sorted(n2))
-print(flatten(n3))
-```
-![Вывод результатов всех трех функций](./images/lab02/image1.png)
-
-### Задание 2
-```python
-def transpose(numlist):
-    final_result = []
-    for num in range(len(numlist) - 1):
-        if len(numlist[num]) != len(numlist[num + 1]):
-            raise ValueError
-    if numlist == []:
-        return []
-    cols = len(numlist)
-    rows = len(numlist[0])
-    for i in range(rows):
-        inter_result = []
-        for j in range(cols):
-            inter_result.append(numlist[j][i])
-        final_result.append(inter_result)
-    return final_result
-
-def unique_sorted(numlist):
-    final_result = []
-    for num in range(len(numlist) - 1):
-        if len(numlist[num]) == len(numlist[num + 1]):
-            final_result.append(sum(numlist[num]))
-        else:
-            raise ValueError
-    final_result.append(sum(numlist[-1]))
-    return final_result
-
-def col_sums(numlist):
-    final_result = []
-    alt_final_result = []
-    if len(numlist) == 1:
-        alt_final_result.append(numlist[0][0])
-        return alt_final_result
-    else:
-        for num in range(len(numlist) - 1):
-            if len(numlist[num]) == len(numlist[num + 1]):
-                for i in range(len(numlist[0])):
-                    final_result.append(numlist[num][i] + numlist[num + 1][i])
-            else:
-                raise ValueError
-        return final_result
-
-n1 = [[1, 2], [3, 4]]
-n2 = [[1, 2, 3], [4, 5, 6]]
-n3 = [[1, 2, 3], [4, 5, 6]]
-
-print(transpose(n1))
-print(unique_sorted(n2))
-print(col_sums(n3))
-```
-![Вывод результатов всех трех функций](./images/lab02/image2.png)
-
-### Задание 3
-```python
-def format_record(info):
-    fio = info[0]
-    group = info[1]
-    gpa = info[2]
-    fio = fio.split()
-    if len(fio) == 3:
-        fio[0] = fio[0][0].upper() + fio[0][1:] 
-        fio[1] = fio[1][0].upper() + '.'
-        fio[2] = fio[2][0].upper() + '.'
-        fio = " ".join(fio)
-    else: 
-        fio[0] = fio[0][0].upper() + fio[0][1:] 
-        fio[1] = fio[1][0].upper() + '.'
-        fio = " ".join(fio)
-    group = 'гр. ' + group
-    gpa = "GPA " + str(round(gpa, 2)) + '0'
-    return str(fio + ", " + group + ", " + gpa)
-
-info = ("Петров Пётр", "IKBO-12", 5.0)
-info2 = ("  сидорова  анна   сергеевна ", "ABB-01", 3.999)
-print(format_record(info))
-print(format_record(info2))
-```
-![Вывод на двух разных входах](./images/lab02/image3.png)
-
-## Лабораторная работа 3
-### text из lib
-```python
-from re import *
-from collections import Counter
-
-def normalize(stroka):
-    stroka = stroka.casefold()
-    stroka = stroka.replace("ё", "е")
-    stroka = stroka.split()
-    stroka = " ".join(stroka)
-    return stroka
-
-def tokenize(stroka):
-    stroka = normalize(stroka)
-    pattern = r'\w+(?:-\w+)*'
-    match = findall(pattern, stroka)
-    return match
-
-def count_freq(stroka):
-    freq = Counter(stroka)
-    freq = dict(freq)
-    return(freq)
-
-def top_n(stroka, n):
-    freq = Counter(stroka)
-    sorted_freq = sorted(freq.items(), key = lambda item: (-item[1], item[0]))
-    return sorted_freq[0:n]
+@dataclass
+class Student:
+    fio: str
+    birthdate: str
+    group: str
+    gpa: float
+    
+    def __post_init__(self):
+        """Валидация данных после инициализации"""
+        # Валидация формата даты
+        if not re.match(r'^\d{4}-\d{2}-\d{2}$', self.birthdate):
+            raise ValueError(f"Неверный формат даты: {self.birthdate}. Ожидается YYYY-MM-DD")
+   
+        # Проверка, что дата существует
+        try:
+            datetime.strptime(self.birthdate, '%Y-%m-%d')
+        except ValueError:
+            raise ValueError(f"Неверная дата: {self.birthdate}")
+        
+        # Валидация GPA
+        if not 0 <= self.gpa <= 5:
+            raise ValueError(f"GPA должен быть в диапазоне от 0 до 5, получено: {self.gpa}")
+        
+        # Валидация ФИО (должно содержать как минимум 2 слова)
+        if len(self.fio.strip().split()) < 2:
+            raise ValueError(f"ФИО должно содержать как минимум имя и фамилию: {self.fio}")
+    
+    def age(self) -> int:
+        """Вычисление возраста студента в полных годах"""
+        birth_date = datetime.strptime(self.birthdate, '%Y-%m-%d')
+        today = date.today()
+        
+        age = today.year - birth_date.year
+        # Корректировка, если день рождения еще не наступил в этом году
+        if (today.month, today.day) < (birth_date.month, birth_date.day):
+            age -= 1
+        return age
+    
+    def to_dict(self) -> dict:
+        """Сериализация объекта в словарь"""
+        return asdict(self)
+    
+    @classmethod
+    def from_dict(cls, data: dict) -> 'Student':
+        """Десериализация из словаря"""
+        return cls(
+            fio=data['fio'],
+            birthdate=data['birthdate'],
+            group=data['group'],
+            gpa=float(data['gpa'])
+        )
+    
+    def __str__(self) -> str:
+        """Красивый вывод информации о студенте"""
+        return f"{self.fio}\n" \
+               f"Дата рождения: {self.birthdate} (Возраст: {self.age()} лет)\n" \
+               f"Группа: {self.group}\n" \
+               f"Средний балл: {self.gpa:.2f}"
+    
+    def __repr__(self) -> str:
+        """Официальное строковое представление"""
+        return f"Student(fio='{self.fio}', birthdate='{self.birthdate}', " \
+               f"group='{self.group}', gpa={self.gpa})"
+    
 
 ```
 
-### text_stats
+### serialize.py
 ```python
-import sys
-import os
-
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, project_root)
-
-from src.lib.text import normalize, tokenize, count_freq, top_n
-
-words = sys.stdin.read()
-
-count_words = (count_freq(tokenize(words)))
-top_words =  top_n(tokenize(words), 5)
-
-print("Всего слов: " + str(len(tokenize(words))))
-print("Уникальных слов: " + str(len(count_words)))
-print("Топ 5:")
-for i in range(len(top_words)):
-    print(str(top_words[i][0]) + ":" + str(top_words[i][1]))
-```
-
-![Картинка](./images/lab03/image.png)
-
-## Лабораторная работа 4
-### io_txt_csv.py
-```python
-from pathlib import *
-import csv
-from typing import Iterable, Sequence
-
-def read_text (path: str, encoding = "utf-8") -> str:
-    if type(path) == str:
-        if not Path(path).exists():
-            raise FileNotFoundError
-        if encoding != "utf-8":
-            raise UnicodeDecodeError
-    else:
-        raise TypeError
-    return Path(path).read_text(encoding=encoding)
-
-def write_csv(rows, path: str | Path, header: tuple[str, ...] | None) -> None:  
-    if rows is None:
-        rows = []
-    p = Path(path)
-    rows = list(rows)
-    with p.open("w", newline="", encoding="utf-8") as f:
-        for j in range(len(rows) - 1): # Проверяем длину каждого элемента данных
-            if len(rows[j]) != len(rows[j+1]):
-                raise ValueError
-        w = csv.writer(f)
-        if header is not None:
-            w.writerow(header)
-        if header is not None and rows != []:
-            if len(header) != len(rows[0]): #заголовков надо столько-же
-                raise ValueError
-        for r in rows:
-            w.writerow(r)
-```
-### Созданный файл с текстом
-![Картинка](./images/lab04/1.png)
-
-### text_report.py
-```python
-import sys
-import os
+rom models import Student
 from pathlib import Path
-
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, project_root)
-
-from src.lib.text import normalize, tokenize, count_freq, top_n
-from src.lab04.io_txt_csv import read_text, write_csv
-
-path_in = "././data/lab04/input.txt"
-if Path(path_in).exists(): # Проверяем наличие входного файла
-    with open(path_in, mode="r", newline='', encoding='utf-8') as f:
-        stroka = f.read()
-        format_stroka = top_n(count_freq(tokenize(stroka)), 5)
-        i = write_csv(format_stroka, ('src/lab04/report.csv'), ('word','count'))
-        r = read_text('src/lab04/report.csv', encoding = "utf-8")   
-        print(r)
-else:
-    raise FileNotFoundError # Если файла нет - ошибка
-```
-### Созданный файл csv
-![Картинка](./images/lab04/2.png)
-
-## Лабораторная работа 5
-### json_csv.py
-```python
-from pathlib import Path
+from typing import List
 import json
-import csv
 
-def csv_2_json(samples: str, out: str|Path = None, encoding='utf-8'):
-    spisok = []
-    with open(samples, encoding='utf-8') as csv_fi:
-        filtr = csv.DictReader(csv_fi)
-        for li1 in filtr:
-            spisok.append(li1)
-    
-    if out is None:
-        samples = Path(samples)
-        diroput = Path('data\out')
-        out = diroput / f'people_from_csv.json'
+def student_to_json(students, path):
+    students_dict = []
+    for student in students:
+        student_dict = student.to_dict() 
+        students_dict.append(student_dict)
 
-    with open(out,'w',encoding='utf-8') as json_fi:
-        json.dump(spisok, json_fi, ensure_ascii=False)
+    if path is None:
+        path = Path('src/lab08/students_output.json')
+    with open(path, 'w', encoding = "utf-8") as f:
+        json.dump(students_dict, f, ensure_ascii = False, indent = 2)
+    print(f"Сохранено {len(students)} студентов в файл: {path}")
 
 
-def json_2_csv(samples: str, out: str|Path = None, encoding = 'utf-8'):
-    with open(samples, 'r', encoding='utf-8') as json_fi:
-        filtr = json.load(json_fi)
-    
-    if out is None:
-        samples = Path(samples)
-        diroput = Path('data\out')
-        out = diroput / f'people_from_json.csv'
+def students_from_json(path: str) -> List[Student]:
+    if not Path(path).exists():
+        raise FileNotFoundError
+    try:
+        with open(path, 'r', encoding='utf-8') as f:
+            data = json.load(f)  # читаем JSON, получаем список
+    except json.JSONDecodeError as e:
+        raise ValueError
+    students = []
+    for item in data:
+        student = Student.from_dict(item)
+        students.append(student)
+    return students
+        
 
-    with open(out,'w',encoding='utf-8',newline='') as csv_fi:
-        head = filtr[0].keys()
-        pisa = csv.DictWriter(csv_fi, fieldnames=head)
-        pisa.writeheader()
-        pisa.writerows(filtr)
- ```
-
- ### csv_xlsx.py
-```python
-from pathlib import Path
-from openpyxl import *
-import csv 
-
-def csv_2_xlsx(samples: str, out: str|Path = None, encoding='utf-8'):
-    f_xlsx = Workbook()
-    stranica = f_xlsx.active
-    stranica.title = 'Эксель формат'
-
-    if out is None:
-        samples = Path(samples)
-        diroput = Path('data\out')
-        out = diroput / f'people.xlsx'
-
-    with open(samples,'r',encoding='utf-8') as csv_fi:
-        filtr = csv.reader(csv_fi)
-        for nu_st, lin in enumerate(filtr,1):
-            for nu_cmn, val in enumerate(lin,1):
-                stranica.cell(row=nu_st,column=nu_cmn,value=val)
-    f_xlsx.save(out)  
- ```
-
-## Лабораторная работа 5
-### cli_convert.py
-```python
-import csv
-import json
-import sys 
-import os
-from openpyxl import Workbook
-from pathlib import Path
-import argparse
-
-def csv_2_xlsx(input_file: str|Path, output_file: str|Path = None, encoding='utf-8'):
-    workbook = Workbook()
-    worksheet = workbook.active
-    worksheet.title = 'Основной лист'
-
-    if output_file is None:
-        input_path = Path(input_file)
-        output_dir = Path('data/output_stuff')
-        output_file = output_dir / f'{input_path.stem}.xlsx'
-
-    with open(input_file, 'r', encoding='utf-8') as csv_file:
-        reader = csv.reader(csv_file)
-        for row_num, row_data in enumerate(reader, 1):
-            for col_num, cell_value in enumerate(row_data, 1):
-                worksheet.cell(row=row_num, column=col_num, value=cell_value)
-    workbook.save(output_file)  
-
-def csv_2_json(input_file: str|Path, output_file: str|Path = None, encoding='utf-8'):
-    data_list = []
-
-    with open(input_file, encoding='utf-8') as csv_file:
-        reader = csv.DictReader(csv_file)
-        for row in reader:
-            data_list.append(row)
-    
-    if output_file is None:
-        input_path = Path(input_file)
-        output_dir = Path('data/output_stuff')
-        output_file = output_dir / f'{input_path.stem}.json'
-
-    with open(output_file, 'w', encoding='utf-8') as json_file:
-        json.dump(data_list, json_file, ensure_ascii=False, indent=2)
-
-def json_2_csv(input_file: str|Path, output_file: str|Path = None, encoding='utf-8'):
-    with open(input_file, 'r', encoding='utf-8') as json_file:
-        json_data = json.load(json_file)
-    
-    if output_file is None:
-        input_path = Path(input_file)
-        output_dir = Path('data/output_stuff')
-        output_file = output_dir / f'{input_path.stem}.csv'
-
-    with open(output_file, 'w', encoding='utf-8', newline='') as csv_file:
-        headers = json_data[0].keys()
-        writer = csv.DictWriter(csv_file, fieldnames=headers)
-        writer.writeheader()
-        writer.writerows(json_data)    
-
-def configure_arguments():
-    parser = argparse.ArgumentParser(description='Конвертер файлов между форматами CSV, JSON и Excel')
-    parser.add_argument('--mode', type=str, required=True,
-                        choices=['csv2json', 'json2csv', 'csv2xlsx'],
-                        help='Выбор формата конвертации: csv2json, json2csv или csv2xlsx')
-    parser.add_argument('--input', type=str, required=True,
-                        help='Путь к исходному файлу для конвертации')
-    parser.add_argument('--output', type=str,
-                        help='Путь для сохранения конвертированного файла (опционально)')
-    parser.add_argument('--encoding', type=str, default='utf-8',
-                        help='Кодировка файлов (по умолчанию: utf-8)')
-    args = parser.parse_args()
-    
-    if args.mode == 'csv2json':
-        csv_2_json(args.input, args.output, args.encoding)
-    elif args.mode == 'json2csv':
-        json_2_csv(args.input, args.output, args.encoding)
-    elif args.mode == 'csv2xlsx':
-        csv_2_xlsx(args.input, args.output, args.encoding)    
-
-if __name__ == '__main__':
-    configure_arguments()
+test_students = [
+    Student("Иванов Иван", "2000-01-15", "SE-01", 4.5),
+    Student("Петрова Анна", "2001-08-22", "SE-02", 4.8),
+    Student("Сидоров Алексей", "1999-03-10", "CS-01", 3.9)
+]
+student_to_json(test_students, None)
 ```
-### cli_text.py
+### test.py
 ```python
-from pathlib import Path
+# test_student.py
+from models import Student
+
+print("=== ТЕСТ 1: Создание студента ===")
+# Создаём студента
+student1 = Student(
+    fio="Иванов Иван Иванович",
+    birthdate="2000-05-15",
+    group="SE-01",
+    gpa=4.5
+)
+
+print(f"Создан студент: {student1}")
+print(f"Тип объекта: {type(student1)}")
+
+print("\n=== ТЕСТ 2: Проверка методов ===")
+# Проверяем методы
+print(f"Возраст студента: {student1.age()} лет")
+print(f"Словарь студента: {student1.to_dict()}")
+
+print("\n=== ТЕСТ 3: Создание из словаря ===")
+# Создаём второго студента из словаря
+data = {
+    'fio': 'Петрова Анна Сергеевна',
+    'birthdate': '2001-08-22',
+    'group': 'SE-02',
+    'gpa': 4.8
+}
+
+student2 = Student.from_dict(data)
+print(f"Создан из словаря: {student2}")
+
+print("\n=== ТЕСТ 4: Проверка валидации (ошибки) ===")
+# Пробуем создать студента с ошибками
+try:
+    bad_student = Student(
+        fio="Тестовый",
+        birthdate="2000-13-45",  #  Неправильная дата
+        group="TEST",
+        gpa=3.0
+    )
+except ValueError as e:
+    print(f"Ошибка даты (ожидаемо): {e}")
+
+try:
+    bad_student = Student(
+        fio="Тестовый",
+        birthdate="2000-01-01",
+        group="TEST",
+        gpa=10.0  #  GPA > 5
+    )
+except ValueError as e:
+    print(f"Ошибка GPA (ожидаемо): {e}")
+
+print("\n=== ТЕСТ 5: Работа с несколькими студентами ===")
+students = [student1, student2]
+for i, student in enumerate(students, 1):
+    print(f"Студент {i}: {student}")
+    print(f"   Возраст: {student.age()} лет")
+    print(f"   Словарь: {student.to_dict()}")
+```
+
+## Лабораторная работа 9
+### group.py
+```python
 import sys
 import os
-import argparse
+from dataclasses import dataclass
+import csv
+from pathlib import Path
 
-def tokenize(text):
-    import re
-    text = text.casefold().strip()
-    text = re.sub(r'[^0-9ёa-zA-Zа-яА-Я-]', ' ', text)
-    text = text.replace('ё', 'е')
-    text = text.split()
-    text = ' '.join(text)
-    return text.split(' ')
+# Полный путь к проекту
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+# Добавляем src в путь
+sys.path.append(os.path.join(project_root, 'src'))
+from lab08.models import Student
+class Group:
 
-def count_freq(words):
-    unique_words = set(words)
-    sorted_unique = sorted(unique_words)
-    frequency_dict = {}
-    for word in sorted_unique:
-        frequency_dict[word] = words.count(word)
-    return frequency_dict
+    CSV_HEADER = ['fio', 'birthdate', 'group', 'gpa']
 
-def show_statistics(filename, limit):
-    with open(filename, 'r', encoding='utf-8') as file:
-        content = file.read()
-        tokens = sorted(tokenize(content))
-        frequencies = count_freq(tokens)
-        top_words = sorted(frequencies.items(), key=lambda item: item[1], reverse=True)[:limit]
-    print(top_words)    
+    def __init__(self, storage_path: str):
+        self.path = Path(storage_path)
+        
+        # Создаем директорию если ее нет
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        
+        # Если файла НЕТ ИЛИ он пустой - создаем/пересоздаем с заголовком
+        if not self.path.exists() or os.path.getsize(self.path) == 0:
+            with open(self.path, 'w', encoding='utf-8') as file:
+                file.write("fio,birthdate,group,gpa\n")
+            print(f"DEBUG: Создан/пересоздан файл {self.path}")
+        else:
+            print(f"DEBUG: Используем существующий файл {self.path}")
+
+    def _read_all_(self):
+        spisok = []
+        try:
+            with open(self.path, mode='r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                
+                # Проверяем заголовок ТОЛЬКО ПОСЛЕ создания reader
+                if reader.fieldnames is not None and reader.fieldnames != self.CSV_HEADER:
+                    raise ValueError("Некорректный формат CSV-файла")
+                
+                for row in reader:
+                    spisok.append(row)
+                    
+        except FileNotFoundError:
+            # Если файл не найден, возвращаем пустой список
+            return []
+        except Exception as e:
+            # Другие ошибки
+            print(f"Ошибка при чтении файла: {e}")
+            return []
+        
+        return spisok
     
-def display_file_content(filename, show_numbers=False):
-    with open(filename, 'r', encoding='utf-8') as file:
-        lines = file.readlines()
-        line_number_width = len(str(len(lines)))
-        for index, line in enumerate(lines, start=1):
-            if show_numbers:
-                print(f"{index}. {line}", end='')
+    def _write_all(self, students):
+        """Записывает всех студентов в CSV-файл."""
+        with open(self.path, 'w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(self.CSV_HEADER)
+            for student in students:
+                writer.writerow([student.fio, student.birthdate, student.group, student.gpa])
+
+    def list(self):
+        students = []
+        rows = self._read_all_()
+        for row in rows:
+            students.append( # Добавляем всех студентов в виде объектов Student
+                Student(fio=row['fio'], birthdate=row['birthdate'], group=row['group'], gpa=float(row['gpa']))
+            )
+        return students  
+    
+    def add(self, student):
+         with open(self.path, 'a', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow([student.fio, student.birthdate, student.group, student.gpa])
+
+    def find(self, substr):
+        all_students = self.list()
+        substr_lower = substr.lower()
+        found_students = []
+        # Перебираем всех студентов
+        for student in all_students:
+            # Приводим ФИО студента к нижнему регистру
+            student_fio_lower = student.fio.lower()
+            
+            # Проверяем, содержится ли подстрока в ФИО
+            if substr_lower in student_fio_lower:
+                # Если да - добавляем студента в список найденных
+                found_students.append(student)
+        
+        # Возвращаем список найденных студентов
+        return found_students
+    
+    def remove(self, fio):
+        all_students = self.list()
+        new_students = [student for student in all_students if student.fio != fio]
+        
+        if len(new_students) == len(all_students):
+            return False  # Никто не удален
+        
+        self._write_all(new_students)
+        return True
+
+    def update(self, fio, **fields):
+        all_students = self.list()
+        updated = False
+        
+        for student in all_students:
+            if student.fio == fio:
+                # Обновляем указанные поля
+                if 'fio' in fields:
+                    student.fio = fields['fio']
+                if 'birthdate' in fields:
+                    student.birthdate = fields['birthdate']
+                if 'group' in fields:
+                    student.group = fields['group']
+                if 'gpa' in fields:
+                    student.gpa = float(fields['gpa'])
+                updated = True
+                break
+        
+        if updated:
+            self._write_all(all_students)
+        all_students = self.list()
+        return updated
+    
+    def count(self) -> int:
+        """Возвращает количество студентов."""
+        return len(self.list())
+    
+    def stats(self):
+        """
+        Возвращает статистику по студентам в группе.
+        
+        Returns:
+            Словарь со статистикой:
+            {
+                "count": общее количество студентов,
+                "min_gpa": минимальный GPA,
+                "max_gpa": максимальный GPA,
+                "avg_gpa": средний GPA,
+                "groups": распределение по группам,
+                "top_5_students": топ-5 студентов по GPA
+            }
+        """
+        # Получаем всех студентов
+        students = self.list()
+        # Если нет студентов - возвращаем пустую статистику
+        if not students:
+            return {
+                "count": 0,
+                "min_gpa": 0,
+                "max_gpa": 0,
+                "avg_gpa": 0,
+                "groups": {},
+                "top_5_students": []
+            }
+         # 1. Общее количество
+        total_count = len(students)
+        
+        # 2. Статистика по GPA
+        gpa_values = [student.gpa for student in students]
+        min_gpa = min(gpa_values)
+        max_gpa = max(gpa_values)
+        avg_gpa = sum(gpa_values) / total_count
+
+        # 3. Распределение по группам
+        groups_distribution = {}
+        for student in students:
+            group_name = student.group
+            if group_name in groups_distribution:
+                groups_distribution[group_name] += 1
             else:
-                print(line, end='')                
+                groups_distribution[group_name] = 1
 
-def process_arguments():
-    parser = argparse.ArgumentParser(description='Утилита для работы с текстовыми файлами')
-    parser.add_argument('--mode', type=str, required=True,
-                     choices=['stats', 'cat'],
-                     help='Режим работы: stats - статистика, cat - просмотр файла')
-    parser.add_argument('--input', type=str, required=True,
-                     help='Путь к входному файлу')
-    parser.add_argument('--output', type=str,
-                     help='Путь для сохранения результата (опционально)')
-    parser.add_argument('--encoding', type=str, default='utf-8',
-                     help='Кодировка файла (по умолчанию: utf-8)')
-    parser.add_argument('-t', '--top', type=int,
-                     help='Количество наиболее частых слов для вывода (только для режима stats)')
-    parser.add_argument('-n', '--number', action='store_true',
-                     help='Показывать номера строк (только для режима cat)')
-    args = parser.parse_args()
+          # 4. Топ-5 студентов по GPA
+        # Сортируем студентов по GPA в убывающем порядке
+        sorted_students = sorted(students, key=lambda s: s.gpa, reverse=True)
+        
+        # Берем первых 5 (или меньше, если студентов меньше 5)
+        top_5 = sorted_students[:5]
+        
+        # Преобразуем в список словарей
+        top_5_list = [
+            {"fio": student.fio, "gpa": student.gpa}
+            for student in top_5
+        ]
+        
+        # 5. Формируем итоговый словарь
+        statistics = {
+            "count": total_count,
+            "min_gpa": min_gpa,
+            "max_gpa": max_gpa,
+            "avg_gpa": round(avg_gpa, 2),  # Округляем до 2 знаков
+            "groups": groups_distribution,
+            "top_5_students": top_5_list
+        }
+        
+        return statistics
+```
+
+### test.py
+```python
+#!/usr/bin/env python3
+"""
+ФИНАЛЬНЫЙ РАБОЧИЙ ТЕСТ
+"""
+
+import tempfile
+import os
+import sys
+
+sys.path.append('src')
+
+from lab08.models import Student
+from lab09.group import Group
+
+print("🧪 ФИНАЛЬНЫЙ ТЕСТ")
+print("=" * 40)
+
+# Создаем пустой файл
+temp_file = tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, encoding='utf-8')
+csv_path = temp_file.name
+temp_file.close()
+
+print(f"Файл: {csv_path}")
+
+try:
+    print("\n1. Создаем Group с пустым файлом...")
+    group = Group(csv_path)  # Должен добавить заголовок
     
-    if args.mode == 'stats':
-        if not args.top:
-            print("Ошибка: для режима stats необходимо указать параметр --top")
-            sys.exit(1)
-        show_statistics(args.input, args.top)
-    elif args.mode == 'cat':
-        display_file_content(args.input, args.number)
-
-if __name__ == '__main__':
-    process_arguments()
+    print("\n2. Проверяем что в файле...")
+    with open(csv_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+        print(f"   Содержимое: {repr(content)}")
+        assert content == "fio,birthdate,group,gpa\n", "Должен быть заголовок!"
+    
+    print("\n3. Добавляем студента (с полным ФИО!)...")
+    student = Student("Иванов Иван Иванович", "2003-10-10", "БИВТ-21-1", 4.3)
+    group.add(student)
+    print("   ✅ Студент добавлен")
+    
+    print("\n4. Проверяем файл...")
+    with open(csv_path, 'r', encoding='utf-8') as f:
+        lines = f.readlines()
+        print(f"   Всего строк: {len(lines)}")
+        for i, line in enumerate(lines):
+            print(f"   Строка {i}: {repr(line)}")
+    
+    print("\n5. Проверяем list()...")
+    students = group.list()
+    print(f"   list() вернул: {len(students)} студентов")
+    
+    if students:
+        print(f"   Первый студент: {students[0].fio}, GPA: {students[0].gpa}")
+    
+    print("\n6. Тестируем все методы CRUD...")
+    
+    print(f"   count(): {group.count()}")
+    print(f"   find('Иванов'): {len(group.find('Иванов'))}")
+    print(f"   update(): {group.update('Иванов Иван Иванович', gpa=4.5)}")
+    print(f"   remove(): {group.remove('Иванов Иван Иванович')}")
+    print(f"   После удаления: {group.count()}")
+    
+    print("\n🎉 ВСЁ РАБОТАЕТ КОРРЕКТНО!")
+    
+except AssertionError as e:
+    print(f"\n❌ AssertionError: {e}")
+except Exception as e:
+    print(f"\n❌ ОШИБКА: {type(e).__name__}: {e}")
+    import traceback
+    traceback.print_exc()
+finally:
+    if os.path.exists(csv_path):
+        os.unlink(csv_path)
+        print(f"\n🗑️  Файл удален")
 ```
