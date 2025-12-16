@@ -1,5 +1,5 @@
 ## Прошлые лабораторные работы сданы!
-![Жотаро Доволен](blob:https://tenor.com/fae0288c-6775-460a-922d-7025a3ba1a9f)
+![Жотаро Доволен](C:\Users\klimo\python_labs\data\gif\tenor.gif)
 
 ## Лабораторная работа 10
 ### structures.py
