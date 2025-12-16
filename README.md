@@ -72,6 +72,8 @@ queue.dequeue()
 print("empty after last dequeue?", queue.is_empty())
 ```
 
+![Тест](https://github.com/Raelag2/python_labs/blob/main/images/lab10/image.png)
+
 ### linked_list.py
 ```python
 class Node:
